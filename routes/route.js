@@ -6,5 +6,6 @@ router.post("/register", ServerController.register)
 router.post("/login", ServerController.login)
 router.post("/userData", ServerController.userData)
 router.post('/profilePhoto', ServerController.profilePhoto)
+router.post('/editProfile', ServerController.editProfile)
 
 module.exports = router

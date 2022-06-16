@@ -33,7 +33,7 @@ const login =(req, res)=>{
             if (result.length == 0) {
                 res.status(200).send({msg: 'Login Failed!'})
             } else {
-                console.log(result)
+                // console.log(result)
                 res.status(200).send({msg: 'Success', id: result[0]._id})
             }            
         }
@@ -68,6 +68,16 @@ const profilePhoto =(req, res)=>{
         }
     })
 }
+const editProfile = (req, res)=>{
+    const id = req.body._id
+    userModel.findByIdAndUpdate(id, req.body, (err, result)=>{
+        if(err){
+            res.status(400).json("Edit Failed")
+        }else{
+            res.status(200).json("Success")
+        }
+    })
+}
 
-let ServerController = {register, login, userData, profilePhoto}
+let ServerController = {register, login, userData, profilePhoto, editProfile}
 module.exports = ServerController

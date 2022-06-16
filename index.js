@@ -1,7 +1,6 @@
 const express = require('express')
 const app = express()
 require('dotenv').config()
-// const API_PORT = process.env
 const port = process.env.PORT
 const bodyParser = require('body-parser')
 app.use(bodyParser.urlencoded({extended: true, limit: '50mb'}))
@@ -11,7 +10,7 @@ app.use(cors())
 const router = require('./routes/route')
 app.use('/', router)
 const mongoose = require('mongoose')
-const URI = 'mongodb+srv://Saytzeff-D:lolly15@cluster0.afjdjoq.mongodb.net/instagram?retryWrites=true&w=majority'
+const URI = process.env.URI
 mongoose.connect(URI, (err)=>{
     if (err) {
         console.log('Unable to connect mongoose')
