@@ -7,5 +7,6 @@ router.post("/login", ServerController.login)
 router.post("/userData", ServerController.userData)
 router.post('/profilePhoto', ServerController.profilePhoto)
 router.post('/editProfile', ServerController.editProfile)
+router.post('/fetchProfile', ServerController.fetchProfile)
 
 module.exports = router

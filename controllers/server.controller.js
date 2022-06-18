@@ -78,6 +78,15 @@ const editProfile = (req, res)=>{
         }
     })
 }
+const fetchProfile = (req, res)=>{
+    userModel.findOne(req.body, (err, result)=>{
+        if(err){
+            console.log(err)
+        }else{
+            res.status(200).json(result)
+        }
+    })
+}
 
-let ServerController = {register, login, userData, profilePhoto, editProfile}
+let ServerController = {register, login, userData, profilePhoto, editProfile, fetchProfile}
 module.exports = ServerController
