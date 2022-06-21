@@ -1,5 +1,6 @@
 const cloudinary = require('cloudinary')
-const userModel = require('../models/user.model')
+const UserModel = require('../models/user.model')
+const PostModel = require('../models/post.model')
 cloudinary.config({
     cloud_name: process.env.CLOUD_NAME,
     api_key: process.env.API_KEY,
@@ -8,10 +9,10 @@ cloudinary.config({
 const register =(req, res)=>{
     let user = req.body
     console.log(req.body)
-    userModel.find({email: req.body.email}, (err, result)=>{
+    UserModel.find({email: req.body.email}, (err, result)=>{
         console.log(result)
         if (result.length == 0) {
-            let form = new userModel(user)
+            let form = new UserModel(user)
             form.save((err)=>{
                 if (err) {
                     res.send({msg: 'Error! Please try again'})
@@ -26,7 +27,7 @@ const register =(req, res)=>{
 }
 const login =(req, res)=>{
     let loginInfo = req.body
-    userModel.find(loginInfo, (err, result)=>{
+    UserModel.find(loginInfo, (err, result)=>{
         if (err) {
             res.status(400).send({msg: 'Server Error'})
         } else {
@@ -41,7 +42,7 @@ const login =(req, res)=>{
 }
 const userData =(req, res)=>{
     const _id = req.body
-    userModel.find(_id, (err, result)=>{
+    UserModel.find(_id, (err, result)=>{
         if(err){
             console.log(err)
             res.status(300).send({msg: 'Server Timeout'})
@@ -58,7 +59,7 @@ const profilePhoto =(req, res)=>{
             res.status(300).json({msg: 'Cloudinary Error'})
         } else {
             let photoUrl = result.secure_url
-            userModel.findByIdAndUpdate(req.body.id, {image_url: photoUrl}, (err, result)=>{
+            UserModel.findByIdAndUpdate(req.body.id, {image_url: photoUrl}, (err, result)=>{
                 if (err) {
                     res.status(400).json({msg: 'Mongo DB error'})
                 } else {
@@ -70,7 +71,7 @@ const profilePhoto =(req, res)=>{
 }
 const editProfile = (req, res)=>{
     const id = req.body._id
-    userModel.findByIdAndUpdate(id, req.body, (err, result)=>{
+    UserModel.findByIdAndUpdate(id, req.body, (err, result)=>{
         if(err){
             res.status(400).json("Edit Failed")
         }else{
@@ -79,7 +80,7 @@ const editProfile = (req, res)=>{
     })
 }
 const fetchProfile = (req, res)=>{
-    userModel.findOne(req.body, (err, result)=>{
+    UserModel.findOne(req.body, (err, result)=>{
         if(err){
             console.log(err)
         }else{
@@ -87,6 +88,27 @@ const fetchProfile = (req, res)=>{
         }
     })
 }
+const createPost = (req, res)=>{
+    const post = req.body
+    cloudinary.v2.uploader.upload(post.mediaUrl, {resource_type: 'auto'}, (err, result)=>{
+        if(err){
+            console.log(err)
+            res.status(400).json('Error')
+        }else{
+            post.mediaUrl = result.secure_url
+            post.uploadDate = new Date().toUTCString()
+            let postForm = new PostModel(post)
+            postForm.save((err)=>{
+                if(err){
+                    res.status(400).json('Server Error')
+                }else{
+                    res.status(200).json({msg: 'Upload Successful'})
+                }
+            })
+        }
+    })
+}
+const viewAllPost = (req, res)=>{}
 
-let ServerController = {register, login, userData, profilePhoto, editProfile, fetchProfile}
+let ServerController = {register, login, userData, profilePhoto, editProfile, fetchProfile, createPost}
 module.exports = ServerController

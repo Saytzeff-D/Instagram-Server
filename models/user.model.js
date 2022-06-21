@@ -9,5 +9,5 @@ let userSchema = mongoose.Schema({
     image_url: String
 })
 
-let userModel = mongoose.model('users', userSchema)
-module.exports = userModel
+let UserModel = mongoose.model('users', userSchema)
+module.exports = UserModel
